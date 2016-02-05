@@ -46,3 +46,5 @@ void DoTopologyPlot(const ConfigParameters& config);
 // special purpose (EsotericActions.cp)
 template <typename ElemType>
 void DoConvertFromDbn(const ConfigParameters& config);
+template<typename ElemType>
+void DoExportToDbn(const ConfigParameters& config);
