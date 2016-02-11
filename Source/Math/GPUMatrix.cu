@@ -184,7 +184,15 @@ AllocatedElemType* TracingGPUMemoryAllocator::AllocateNoTrace(int deviceId, size
     AllocatedElemType* deviceBufferPtr;
 
     PrepareDevice(deviceId);
-    CUDA_CALL(cudaMalloc((void**) &deviceBufferPtr, sizeof(AllocatedElemType) * numElements));
+	try
+	{
+		CUDA_CALL(cudaMalloc((void**)&deviceBufferPtr, sizeof(AllocatedElemType) * numElements));
+	}
+	catch (const std::exception& e) // catch, log, and rethrow since CUDA code sometimes hangs in destruction, so we'd never get to see the error
+	{
+		fprintf(stderr, "numElements %d * %d\n %s\n", (int) numElements, (int) sizeof(AllocatedElemType), e.what());
+		throw;
+	}
 
     return deviceBufferPtr;
 }
